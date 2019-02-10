@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">HeritageFinder</string>
+    <string name="name">Name: Pacific Hall (Formerly Dontenwill Hall)</string>
+    <string name="address">Address: 336 AGNES ST</string>
+    <string name="get_details">Get Details</string>
+    <string name="todo">TODO</string>
+    <string name="construction_completed">Construction Completed: 1940</string>
+</resources>
