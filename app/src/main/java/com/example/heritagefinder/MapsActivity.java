@@ -33,6 +33,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }catch(NullPointerException e){
             Log.e(TAG, "Buildings not received in MapsActivity");
         }
+
+
     }
 
 
