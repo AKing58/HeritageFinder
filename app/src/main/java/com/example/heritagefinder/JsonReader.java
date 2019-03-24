@@ -34,7 +34,7 @@ public class JsonReader {
 //                }
                 //Building b = new Building(buildingName,coords[0][0],coords[0][1]);
 
-                Building b = new Building(buildingName,0.1,0.1);
+                Building b = new Building(buildingName,0.1,0.1, 0, "");
                 b.setName(buildingName);
                 buildings.add(b);
             }
@@ -57,7 +57,9 @@ public class JsonReader {
                 String buildingName = properties.getString("NAME");
                 double x = properties.getDouble("x");
                 double y = properties.getDouble("y");
-                Building b = new Building(buildingName,x,y);
+                int age = properties.getInt("AGE");
+                String desc = properties.getString("DESC2");
+                Building b = new Building(buildingName,y,x,age,desc);
                 b.setName(buildingName);
                 buildings.add(b);
             }

@@ -10,7 +10,7 @@ import android.widget.SeekBar;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
+public class MainActivity extends AppCompatActivity{
     ArrayList<Building> hertiageBuildings = new ArrayList<>();
     ArrayList<Building> buildingsAgeBuildings = new ArrayList<>();
 
@@ -19,10 +19,8 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        hertiageBuildings.add(new Building("BCIT",  49.250115, -123.000978));
-        hertiageBuildings.add(new Building("Metrotown", 49.226767, -122.999108));
-        SeekBar seekBar = this.findViewById(R.id.seekBar3);
-        seekBar.setOnSeekBarChangeListener(this);
+        //SeekBar seekBar = this.findViewById(R.id.seekBar3);
+        //seekBar.setOnSeekBarChangeListener(this);
         new AsyncTest().execute();
     }
 
@@ -30,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
         Intent i = new Intent(this, DetailsActivity.class);
         startActivity(i);
     }
-
+/*
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         Intent i = new Intent(this, MapsActivity.class);
@@ -39,7 +37,16 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
         i.putExtras(bun);
         startActivity(i);
     }
+    */
 
+    public void openMaps(View view){
+        Intent i = new Intent(this, MapsActivity.class);
+        Bundle bun = new Bundle();
+        bun.putSerializable("buildings", hertiageBuildings);
+        i.putExtras(bun);
+        startActivity(i);
+    }
+/*
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
 
@@ -49,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
     public void onStopTrackingTouch(SeekBar seekBar) {
 
     }
-
+*/
     private class AsyncTest extends AsyncTask<Void,Void,Void> {
 
         @Override
@@ -66,7 +73,6 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
 //            Log.d("xyz","xyz buildingAgeGrabber raw: "+buildingAgeGrabber.downloadedRaw.length());
 //            buildingsAgeBuildings = JsonReader.readerBuildingAge(buildingAgeGrabber.downloadedRaw);
 //            Log.d("xyz","xyz buildingAgeGrabber download: "+buildingsAgeBuildings.size());
-
             return null;
         }
 

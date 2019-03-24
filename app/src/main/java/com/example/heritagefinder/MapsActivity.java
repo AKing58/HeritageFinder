@@ -1,24 +1,32 @@
 package com.example.heritagefinder;
 
+import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     private GoogleMap mMap;
     private ArrayList<Building> buildingsArrayList;
     private String TAG = MainActivity.class.getSimpleName();
-
+    private Context context;
+    private View thisView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +42,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Log.e(TAG, "Buildings not received in MapsActivity");
         }
 
+        thisView = mapFragment.getView();
+        context = getApplicationContext();
 
     }
 
@@ -50,17 +60,55 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
         // Add a marker in Sydney and move the camera
         //LatLng sydney = new LatLng(49.250115, -123.000978);
         //LatLng metrotown = new LatLng(49.226767, -122.999108);
         //mMap.addMarker(new MarkerOptions().position(sydney).title("BCIT"));
         //mMap.addMarker(new MarkerOptions().position(metrotown).title("Metrotown"));
+
+
         LatLng firstBuilding = new LatLng(buildingsArrayList.get(0).getLatitude(), buildingsArrayList.get(0).getLongitude());
+
         for(int i=0; i<buildingsArrayList.size();i++){
             //Log.e(TAG, buildingsArrayList.get(i).getName() + ": " + buildingsArrayList.get(i).getLatitude() + ", " + buildingsArrayList.get(i).getLongitude());
-            mMap.addMarker(new MarkerOptions().position(new LatLng(buildingsArrayList.get(i).getLatitude(), buildingsArrayList.get(i).getLongitude())).title(buildingsArrayList.get(i).getName()));
+            mMap.addMarker(new MarkerOptions().position(new LatLng(buildingsArrayList.get(i).getLatitude(), buildingsArrayList.get(i).getLongitude()))
+                    .title(buildingsArrayList.get(i).getName())
+                    .snippet("Constructed in :" + buildingsArrayList.get(i).getAge() + "\n" + buildingsArrayList.get(i).getDesc()));
+            mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+                @Override
+                public View getInfoWindow(Marker marker) {
+                    return null;
+                }
+
+                @Override
+                public View getInfoContents(Marker marker) {
+
+                    LinearLayout popup = new LinearLayout(context);
+                        popup.setOrientation(LinearLayout.VERTICAL);
+
+                    TextView title = new TextView(context);
+                    title.setTypeface(null, Typeface.BOLD);
+                    title.setGravity(Gravity.CENTER);
+                    title.setText(marker.getTitle());
+
+                    TextView snippet = new TextView(context);
+                    snippet.setText(marker.getSnippet());
+
+                    popup.addView(title);
+                    popup.addView(snippet);
+                    return popup;
+                }
+            });
+            Log.e(TAG, "" + buildingsArrayList.get(i).getLatitude() + " " + buildingsArrayList.get(i).getLongitude() + " " + buildingsArrayList.get(i).getName());
         }
+
+
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(firstBuilding, 15));
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker){
+        marker.showInfoWindow();
+        return true;
     }
 }

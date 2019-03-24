@@ -6,4 +6,6 @@
     <string name="todo">TODO</string>
     <string name="construction_completed">Construction Completed: 1940</string>
     <string name="title_activity_maps">Map</string>
+    <string name="open_map">Open Map</string>
+    <string name="heritage_finder">Heritage Finder</string>
 </resources>
