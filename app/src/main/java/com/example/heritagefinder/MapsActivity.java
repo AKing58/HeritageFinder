@@ -17,6 +17,12 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.TileOverlay;
+import com.google.android.gms.maps.model.TileOverlayOptions;
+import com.google.maps.android.heatmaps.WeightedLatLng;
+import com.google.maps.android.heatmaps.HeatmapTileProvider;
+import com.google.maps.android.heatmaps.Gradient;
+
 
 import java.util.ArrayList;
 
@@ -24,6 +30,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private ArrayList<Building> buildingsArrayList;
+    private ArrayList<WeightedLatLng> weightedList;
     private String TAG = MainActivity.class.getSimpleName();
     private Context context;
     private View thisView;
@@ -38,6 +45,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         try{
             Bundle outBun = getIntent().getExtras();
             buildingsArrayList = (ArrayList<Building>) outBun.getSerializable("buildings");
+            weightedList = new ArrayList<WeightedLatLng>();
+            for(Building b: buildingsArrayList) {
+                LatLng latlng = new LatLng(b.getLatitude(), b.getLongitude());
+                WeightedLatLng weightedPoint = new WeightedLatLng(latlng, 150 / (b.getAge() - 1800));
+                weightedList.add(weightedPoint);
+            }
         }catch(NullPointerException e){
             Log.e(TAG, "Buildings not received in MapsActivity");
         }
@@ -100,6 +113,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             });
             Log.e(TAG, "" + buildingsArrayList.get(i).getLatitude() + " " + buildingsArrayList.get(i).getLongitude() + " " + buildingsArrayList.get(i).getName());
+            HeatmapTileProvider tileProvider = new HeatmapTileProvider.Builder().weightedData(weightedList).radius(50).build();
+            TileOverlay tileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(tileProvider));
         }
 
 
