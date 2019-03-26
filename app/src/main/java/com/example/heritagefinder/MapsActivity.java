@@ -21,7 +21,6 @@ import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.maps.android.heatmaps.WeightedLatLng;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
-import com.google.maps.android.heatmaps.Gradient;
 
 
 import java.util.ArrayList;
@@ -79,23 +78,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        // Add a marker in Sydney and move the camera
-        //LatLng sydney = new LatLng(49.250115, -123.000978);
-        //LatLng metrotown = new LatLng(49.226767, -122.999108);
-        //mMap.addMarker(new MarkerOptions().position(sydney).title("BCIT"));
-        //mMap.addMarker(new MarkerOptions().position(metrotown).title("Metrotown"));
 
 
         LatLng firstBuilding = new LatLng(buildingsArrayList.get(0).getLatitude(), buildingsArrayList.get(0).getLongitude());
 
         for(int i=0; i<buildingsArrayList.size();i++){
-            //Log.e(TAG, buildingsArrayList.get(i).getName() + ": " + buildingsArrayList.get(i).getLatitude() + ", " + buildingsArrayList.get(i).getLongitude());
             if(buildingsArrayList.get(i).getAge() >= minAge && buildingsArrayList.get(i).getAge() <= maxAge){
                 mMap.addMarker(new MarkerOptions().position(new LatLng(buildingsArrayList.get(i).getLatitude(), buildingsArrayList.get(i).getLongitude()))
                         .title(buildingsArrayList.get(i).getName())
                         .snippet("Constructed in :" + buildingsArrayList.get(i).getAge() + "\n" + buildingsArrayList.get(i).getDesc()));
             }
-
             mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
                 @Override
                 public View getInfoWindow(Marker marker) {
@@ -125,8 +117,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             HeatmapTileProvider tileProvider = new HeatmapTileProvider.Builder().weightedData(weightedList).radius(50).build();
             TileOverlay tileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(tileProvider));
         }
-
-
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(firstBuilding, 15));
     }
 

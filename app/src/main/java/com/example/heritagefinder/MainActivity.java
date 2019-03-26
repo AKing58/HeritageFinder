@@ -25,8 +25,6 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //SeekBar seekBar = this.findViewById(R.id.seekBar3);
-        //seekBar.setOnSeekBarChangeListener(this);
         new AsyncTest().execute();
 
         minText = findViewById(R.id.minEditText);
@@ -83,29 +81,6 @@ public class MainActivity extends AppCompatActivity{
         });
     }
 
-    public void getDetails(View view){
-        Intent i = new Intent(this, DetailsActivity.class);
-        startActivity(i);
-    }
-/*
-    @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        Intent i = new Intent(this, MapsActivity.class);
-        Bundle bun = new Bundle();
-        bun.putSerializable("buildings", hertiageBuildings);
-        i.putExtras(bun);
-        startActivity(i);
-    }
-    */
-
-    public void minAgeOnChange(){
-        minAge = Integer.parseInt(minText.getText().toString());
-    }
-
-    public void maxAgeOnChange(){
-        maxAge = Integer.parseInt(maxText.getText().toString());
-    }
-
     public void openMaps(View view){
         Intent i = new Intent(this, MapsActivity.class);
         Bundle bun = new Bundle();
@@ -115,17 +90,7 @@ public class MainActivity extends AppCompatActivity{
         i.putExtras(bun);
         startActivity(i);
     }
-/*
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
 
-    }
-
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
-
-    }
-*/
     private class AsyncTest extends AsyncTask<Void,Void,Void> {
 
         @Override
@@ -136,12 +101,6 @@ public class MainActivity extends AppCompatActivity{
             Log.d("xyz","xyz heritageGrabber raw: "+heritageGrabber.downloadedRaw.length());
             hertiageBuildings = JsonReader.readerHeritageRegistry(heritageGrabber.downloadedRaw);
             Log.d("xyz","xyz heritageGrabber download: "+hertiageBuildings.size());
-
-//            InfoGrabber buildingAgeGrabber = new InfoGrabber();
-//            buildingAgeGrabber.download(InfoGrabber.AgeAddress);
-//            Log.d("xyz","xyz buildingAgeGrabber raw: "+buildingAgeGrabber.downloadedRaw.length());
-//            buildingsAgeBuildings = JsonReader.readerBuildingAge(buildingAgeGrabber.downloadedRaw);
-//            Log.d("xyz","xyz buildingAgeGrabber download: "+buildingsAgeBuildings.size());
             return null;
         }
 
