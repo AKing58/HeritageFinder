@@ -34,6 +34,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private String TAG = MainActivity.class.getSimpleName();
     private Context context;
     private View thisView;
+    private int minAge;
+    private int maxAge;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,11 +47,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         try{
             Bundle outBun = getIntent().getExtras();
             buildingsArrayList = (ArrayList<Building>) outBun.getSerializable("buildings");
+            minAge = outBun.getInt("min");
+            maxAge = outBun.getInt("max");
             weightedList = new ArrayList<WeightedLatLng>();
             for(Building b: buildingsArrayList) {
-                LatLng latlng = new LatLng(b.getLatitude(), b.getLongitude());
-                WeightedLatLng weightedPoint = new WeightedLatLng(latlng, 150 / (b.getAge() - 1800));
-                weightedList.add(weightedPoint);
+                if(b.getAge() >= minAge && b.getAge() <= maxAge){
+                    LatLng latlng = new LatLng(b.getLatitude(), b.getLongitude());
+                    WeightedLatLng weightedPoint = new WeightedLatLng(latlng, 150 / (b.getAge() - 1800));
+                    weightedList.add(weightedPoint);
+                }
             }
         }catch(NullPointerException e){
             Log.e(TAG, "Buildings not received in MapsActivity");
@@ -84,9 +90,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         for(int i=0; i<buildingsArrayList.size();i++){
             //Log.e(TAG, buildingsArrayList.get(i).getName() + ": " + buildingsArrayList.get(i).getLatitude() + ", " + buildingsArrayList.get(i).getLongitude());
-            mMap.addMarker(new MarkerOptions().position(new LatLng(buildingsArrayList.get(i).getLatitude(), buildingsArrayList.get(i).getLongitude()))
-                    .title(buildingsArrayList.get(i).getName())
-                    .snippet("Constructed in :" + buildingsArrayList.get(i).getAge() + "\n" + buildingsArrayList.get(i).getDesc()));
+            if(buildingsArrayList.get(i).getAge() >= minAge && buildingsArrayList.get(i).getAge() <= maxAge){
+                mMap.addMarker(new MarkerOptions().position(new LatLng(buildingsArrayList.get(i).getLatitude(), buildingsArrayList.get(i).getLongitude()))
+                        .title(buildingsArrayList.get(i).getName())
+                        .snippet("Constructed in :" + buildingsArrayList.get(i).getAge() + "\n" + buildingsArrayList.get(i).getDesc()));
+            }
+
             mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
                 @Override
                 public View getInfoWindow(Marker marker) {
